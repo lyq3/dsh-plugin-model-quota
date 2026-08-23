@@ -1,0 +1,9 @@
+{
+  "usage": { "limit": 1000, "used": 250, "resetTime": "2030-01-01T00:00:00.000Z" },
+  "limits": [
+    { "name": "rolling", "limit": 100, "used": 20, "resetTime": "2030-01-01T01:00:00.000Z" }
+  ],
+  "parallel": 4,
+  "wallet": { "balance": 123 },
+  "subscription": { "id": "fixture-subscription" }
+}

@@ -1,0 +1,4 @@
+# dsh-plugin-model-quota bundle patch: host plugin row; browser half is discovered via dsh.client.
+- insert:
+    - id: dsh-plugin-model-quota
+      name: 'dsh-plugin-model-quota'

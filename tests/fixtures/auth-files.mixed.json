@@ -1,0 +1,7 @@
+{
+  "files": [
+    { "provider": "kimi", "auth_index": "fixture-kimi-b", "name": "account-b.json" },
+    { "provider": "codex", "auth_index": 7, "email": "account-a" },
+    { "provider": "gemini", "auth_index": "fixture-unknown-c", "name": "account-c.json" }
+  ]
+}

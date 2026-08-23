@@ -1,0 +1,6 @@
+node_modules/
+lib/
+.client-build/
+coverage/
+*.tgz
+.DS_Store
