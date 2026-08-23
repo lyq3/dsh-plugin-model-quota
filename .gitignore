@@ -4,3 +4,12 @@ lib/
 coverage/
 *.tgz
 .DS_Store
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials*.json
+config.local.*

@@ -5,7 +5,7 @@ import { snapshot } from './client-test-helpers.ts'
 const connectionResult = {
   status: 'ok',
   checkedAt: '2030-01-01T00:00:00.000Z',
-  discoveredAccounts: [{ id: 'acct_0123456789abcdef', provider: 'codex', label: 'account-a', supported: true }],
+  discoveredAccounts: [{ id: 'acct_0123456789abcdef0123456789abcdef', provider: 'codex', label: 'account-a', supported: true }],
   unsupportedProviders: [{ provider: 'gemini', count: 1 }],
   errorCode: null,
 } as const

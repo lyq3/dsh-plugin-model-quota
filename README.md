@@ -71,10 +71,10 @@ This is a DSH security boundary, not a plugin failure. Configure the plugin from
 
 ## Network rules
 
-- Loopback HTTP is allowed, for example `http://127.0.0.1:8317`.
-- Non-loopback addresses must use HTTPS.
+- The CLIProxyAPI Base URL must use a loopback hostname: `localhost`, `127.0.0.0/8`, or `[::1]`.
+- Loopback HTTP and HTTPS are supported; the default is `http://127.0.0.1:8317`.
 - Userinfo, query strings, fragments, path traversal, unsafe encodings, and redirects are rejected.
-- Protect every remote CLIProxyAPI Management API with VPN, Access, reverse-proxy authentication, or an equivalent control, and configure only trusted targets.
+- Remote CLIProxyAPI authorities are intentionally rejected in `0.1.x` so the Host cannot disclose the Management Key through SSRF, DNS rebinding, or target misconfiguration. Use a local authenticated reverse proxy or tunnel endpoint bound to loopback when the gateway runs elsewhere.
 
 ## Browser security boundary
 

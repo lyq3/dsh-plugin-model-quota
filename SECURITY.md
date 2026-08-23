@@ -6,7 +6,7 @@ Security fixes are currently provided for the latest `0.1.x` release.
 
 ## Reporting
 
-Please report suspected credential exposure, SSRF, authentication-boundary, or secret-wire issues privately to the repository owner before opening a public issue. Do not include live keys, tokens, account identifiers, or raw upstream responses in a public report.
+Use GitHub's **Security → Report a vulnerability** form to report suspected credential exposure, SSRF, authentication-boundary, or secret-wire issues privately. Do not include live keys, tokens, account identifiers, or raw upstream responses in a public issue.
 
 ## Security boundary
 
@@ -25,11 +25,11 @@ Both reject query parameters and request bodies. Browser callers cannot select a
 
 The CLIProxyAPI Management Key is declared with DSH's `secret` schema role. It is write-only in the browser settings UI and is redacted from settings descriptions. Never put a real key in source code, fixtures, screenshots, logs, issue reports, package artifacts, or Git history.
 
-## Remote CLIProxyAPI targets
+## CLIProxyAPI target policy
 
-Loopback HTTP is supported for local deployments. Non-loopback targets must use HTTPS and must not contain userinfo, query strings, fragments, path traversal, unsafe path encodings, or redirects.
+`0.1.x` accepts loopback authorities only: `localhost`, `127.0.0.0/8`, and `[::1]`. Loopback HTTP and HTTPS are supported. Non-loopback targets are rejected so the DSH Host cannot disclose the Management Key through SSRF, DNS rebinding, metadata endpoints, or a misconfigured remote authority.
 
-Operators remain responsible for choosing a trusted target. Protect every externally reachable Management API with VPN, Access, reverse-proxy authentication, or an equivalent control. Do not configure an untrusted domain: the DSH Host sends the Management Key to the configured authority.
+When CLIProxyAPI runs on another machine, expose it to the DSH Host through an authenticated reverse proxy, VPN tunnel, or SSH tunnel whose local listener is bound to loopback. The configured URL must not contain userinfo, query strings, fragments, path traversal, unsafe path encodings, or redirects.
 
 ## DSH remote settings
 

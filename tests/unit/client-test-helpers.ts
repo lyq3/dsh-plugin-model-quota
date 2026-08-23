@@ -3,7 +3,7 @@ import type { QuotaSnapshot } from '../../src/client/api.ts'
 export const snapshot: QuotaSnapshot = {
   fetchedAt: '2030-01-01T00:00:00.000Z',
   accounts: [{
-    id: 'acct_0123456789abcdef',
+    id: 'acct_0123456789abcdef0123456789abcdef',
     provider: 'codex',
     label: 'account-a',
     shortLabel: 'account-a',

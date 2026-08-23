@@ -50,6 +50,35 @@ async function requireEmptyBody(req: IncomingMessage, maxBytes = 1024): Promise<
   })
 }
 
+function isLoopbackHostname(hostname: string): boolean {
+  if (hostname === 'localhost' || hostname === '[::1]') return true
+  const parts = hostname.split('.')
+  return parts.length === 4 && parts[0] === '127' && parts.every((part) => /^\d{1,3}$/.test(part) && Number(part) <= 255)
+}
+
+function trustedBrowserRequest(req: IncomingMessage): boolean {
+  const authority = req.headers.host
+  if (authority === undefined) return false
+  let host: URL
+  try {
+    host = new URL(`http://${authority}`)
+  } catch {
+    return false
+  }
+  const fetchSite = req.headers['sec-fetch-site']
+  if (fetchSite === 'cross-site') return false
+  const origin = req.headers.origin
+  if (origin !== undefined) {
+    try {
+      if (new URL(origin).host !== host.host) return false
+    } catch {
+      return false
+    }
+  }
+  if (isLoopbackHostname(host.hostname)) return true
+  return fetchSite === 'same-origin'
+}
+
 function hasQuery(req: IncomingMessage): boolean {
   try {
     return new URL(req.url ?? '/', 'http://localhost').search.length > 0
@@ -63,6 +92,10 @@ export function createQuotaRoutes(options: { service: QuotaService; maxJsonRespo
     async getQuota(req, res) {
       headers(res)
       const method = req.method ?? ''
+      if (!trustedBrowserRequest(req)) {
+        send(res, 403, { error: 'forbidden' }, method === 'HEAD', options.maxJsonResponseBytes)
+        return
+      }
       if (method !== 'GET' && method !== 'HEAD') {
         res.setHeader('Allow', 'GET, HEAD')
         send(res, 405, { error: 'method-not-allowed' }, false, options.maxJsonResponseBytes)
@@ -81,6 +114,10 @@ export function createQuotaRoutes(options: { service: QuotaService; maxJsonRespo
     },
     async testConnection(req, res) {
       headers(res)
+      if (!trustedBrowserRequest(req)) {
+        send(res, 403, { error: 'forbidden' }, false, options.maxJsonResponseBytes)
+        return
+      }
       if (req.method !== 'POST') {
         res.setHeader('Allow', 'POST')
         send(res, 405, { error: 'method-not-allowed' }, false, options.maxJsonResponseBytes)

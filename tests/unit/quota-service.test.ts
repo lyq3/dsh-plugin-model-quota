@@ -10,7 +10,7 @@ const credential = (provider: string, index: string, label: string) => ({ provid
 
 describe('QuotaService', () => {
   it('creates stable opaque safe ids', () => {
-    expect(createSafeAccountId('codex', 'fixture-a')).toMatch(/^acct_[0-9a-f]{16}$/)
+    expect(createSafeAccountId('codex', 'fixture-a')).toMatch(/^acct_[0-9a-f]{32}$/)
     expect(createSafeAccountId('codex', 'fixture-a')).toBe(createSafeAccountId('codex', 'fixture-a'))
     expect(createSafeAccountId('codex', 'fixture-a')).not.toContain('fixture-a')
   })

@@ -29,5 +29,6 @@ All notable changes to this project will be documented in this file.
 ### Security
 
 - Management Keys, OAuth tokens, raw auth indexes, authorization headers, and upstream response bodies remain Host-only.
-- Non-loopback CLIProxyAPI URLs require HTTPS; unsafe URL forms and redirects are rejected.
+- CLIProxyAPI targets are restricted to loopback authorities; unsafe URL forms and redirects are rejected.
+- Quota routes enforce Host, Origin, and Fetch Metadata trust checks before returning account data or probing the Management API.
 - Browser routes reject caller-supplied proxy parameters and request bodies.

@@ -9,7 +9,7 @@ export interface GetSnapshotOptions {
 }
 
 export function createSafeAccountId(provider: string, canonicalAuthIndex: string): string {
-  return `acct_${createHash('sha256').update(`dsh-model-quota:v1\0${provider}\0${canonicalAuthIndex}`).digest('hex').slice(0, 16)}`
+  return `acct_${createHash('sha256').update(`dsh-model-quota:v1\0${provider}\0${canonicalAuthIndex}`).digest('hex').slice(0, 32)}`
 }
 
 function normalizedLabel(label: string): string {

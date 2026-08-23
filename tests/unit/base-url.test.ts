@@ -7,8 +7,6 @@ describe('normalizeBaseUrl', () => {
     ['http://127.42.0.9:8317/prefix', 'http://127.42.0.9:8317/prefix/'],
     ['http://localhost:8317', 'http://localhost:8317/'],
     ['http://[::1]:8317', 'http://[::1]:8317/'],
-    ['https://Example.COM/proxy//', 'https://example.com/proxy/'],
-    ['https://192.168.1.10/proxy', 'https://192.168.1.10/proxy/'],
   ])('accepts and normalizes %s', (input, expected) => {
     expect(normalizeBaseUrl(input).href).toBe(expected)
   })
@@ -16,6 +14,10 @@ describe('normalizeBaseUrl', () => {
   it.each([
     'http://example.com',
     'http://192.168.1.10',
+    'https://example.com',
+    'https://192.168.1.10',
+    'https://169.254.169.254',
+    'https://[fd00::1]',
     'ftp://localhost/file',
     'https://user:pass@example.com',
     'https://example.com/?x=1',
@@ -29,7 +31,7 @@ describe('normalizeBaseUrl', () => {
   })
 
   it('resolves only fixed relative management paths beneath a prefix', () => {
-    expect(managementUrl(normalizeBaseUrl('https://example.com/proxy'), 'auth-files').href)
-      .toBe('https://example.com/proxy/v0/management/auth-files')
+    expect(managementUrl(normalizeBaseUrl('http://127.0.0.1:8317/proxy'), 'auth-files').href)
+      .toBe('http://127.0.0.1:8317/proxy/v0/management/auth-files')
   })
 })

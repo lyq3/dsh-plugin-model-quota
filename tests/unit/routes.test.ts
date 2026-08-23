@@ -3,10 +3,11 @@ import type { IncomingMessage, ServerResponse } from 'node:http'
 import { describe, expect, it, vi } from 'vitest'
 import { createQuotaRoutes, installQuotaRoutes } from '../../src/quota/routes.ts'
 
-function invoke(handler: (req: IncomingMessage, res: ServerResponse) => unknown, options: { method: string; url?: string; body?: string }) {
+function invoke(handler: (req: IncomingMessage, res: ServerResponse) => unknown, options: { method: string; url?: string; body?: string; headers?: Record<string, string> }) {
   const req = new EventEmitter() as IncomingMessage
   req.method = options.method
   req.url = options.url ?? '/api/model-quota'
+  req.headers = { host: '127.0.0.1:3080', ...options.headers }
   const headers: Record<string, string> = {}
   let body = ''
   let statusCode = 200
@@ -37,6 +38,15 @@ describe('quota routes', () => {
     expect(result.statusCode).toBe(200)
     expect(result.headers).toMatchObject({ 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' })
     expect(method === 'HEAD' ? result.body : JSON.parse(result.body)).toEqual(method === 'HEAD' ? '' : expect.objectContaining({ sourceStatus: 'ok' }))
+  })
+
+  it('rejects cross-site, foreign-origin, and untrusted-host requests', async () => {
+    expect((await invoke(handlers.getQuota, { method: 'GET', headers: { 'sec-fetch-site': 'cross-site' } })).statusCode).toBe(403)
+    expect((await invoke(handlers.testConnection, { method: 'POST', headers: { 'sec-fetch-site': 'cross-site' } })).statusCode).toBe(403)
+    expect((await invoke(handlers.getQuota, { method: 'GET', headers: { origin: 'https://attacker.example' } })).statusCode).toBe(403)
+    expect((await invoke(handlers.getQuota, { method: 'GET', headers: { host: 'public.example' } })).statusCode).toBe(403)
+    expect((await invoke(handlers.getQuota, { method: 'GET', headers: { host: 'public.example', 'sec-fetch-site': 'same-origin' } })).statusCode).toBe(200)
+    expect((await invoke(handlers.getQuota, { method: 'GET', headers: { origin: 'http://127.0.0.1:3080' } })).statusCode).toBe(200)
   })
 
   it('rejects methods, query parameters, and request bodies', async () => {

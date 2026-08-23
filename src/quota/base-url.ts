@@ -18,7 +18,7 @@ export function normalizeBaseUrl(raw: string): URL {
   if (url.protocol !== 'http:' && url.protocol !== 'https:') throw new TypeError('baseUrl protocol must be http or https')
   if (url.username || url.password) throw new TypeError('baseUrl must not contain userinfo')
   if (url.search || url.hash) throw new TypeError('baseUrl must not contain query or fragment')
-  if (url.protocol === 'http:' && !isLoopback(url.hostname)) throw new TypeError('non-loopback baseUrl must use https')
+  if (!isLoopback(url.hostname)) throw new TypeError('baseUrl must use a loopback hostname')
 
   const rawPath = /^[a-z][a-z0-9+.-]*:\/\/[^/?#]*(?<path>[^?#]*)/i.exec(raw)?.groups?.path ?? ''
   if (ENCODED_PERCENT.test(rawPath) || ENCODED_DOT.test(rawPath) || ENCODED_SEPARATOR.test(rawPath)) {

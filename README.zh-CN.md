@@ -71,10 +71,10 @@ settings are unavailable in this browser
 
 ## 网络规则
 
-- loopback 地址允许 HTTP，例如 `http://127.0.0.1:8317`。
-- 非 loopback 地址必须使用 HTTPS。
+- CLIProxyAPI Base URL 必须使用 loopback hostname：`localhost`、`127.0.0.0/8` 或 `[::1]`。
+- loopback HTTP 与 HTTPS 均可用，默认值为 `http://127.0.0.1:8317`。
 - URL 不允许 userinfo、query、fragment、路径穿越、危险编码或重定向。
-- 若使用远程 CLIProxyAPI，必须通过 VPN、Access、反向代理认证或等价控制保护 Management API，并确保目标地址可信。
+- `0.1.x` 明确拒绝远程 CLIProxyAPI authority，避免 Host 因 SSRF、DNS rebinding 或目标误配泄露 Management Key。若网关运行在其他机器，请先通过受认证的反向代理或隧道将端点安全地绑定到 DSH 主机 loopback。
 
 ## 浏览器安全边界
 
